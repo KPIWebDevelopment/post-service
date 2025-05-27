@@ -31,8 +31,8 @@ public class EndpointSecurityAspect {
     public void logBeforeEndpoint() {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
 
-        log.info("Request URI: " + request.getHeaders(HttpHeaders.ACCEPT));
-        String authHeader = request.getHeader("authorization");
+        log.debug("Request URI: " + request.getHeaders(HttpHeaders.ACCEPT));
+        String authHeader = request.getHeader("Authorization");
         String jwtToken = null;
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             jwtToken = authHeader.substring(7);
@@ -60,6 +60,6 @@ public class EndpointSecurityAspect {
         else if (Boolean.FALSE.equals(response.getBody())){
             throw new SecurityException("JWT token validation failed with status: " + response.getStatusCode());
         }
-        log.info("successfully authenticated request: " + request.getRequestURI());
+//        log.info("successfully authenticated request: " + request.getRequestURI());
     }
 }
