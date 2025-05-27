@@ -1,4 +1,4 @@
-package org.kpi.postservice;
+package org.kpi.postservice.service;
 
 
 import jakarta.persistence.EntityNotFoundException;
@@ -6,8 +6,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.kpi.postservice.model.Post;
 import org.kpi.postservice.repository.PostRepository;
-import org.kpi.postservice.service.PostService;
-import org.kpi.postservice.service.UserService;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -19,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class PostServiceTests {
+public class PostServiceTest {
 
     private static final UUID USER_ID = UUID.fromString("a756183c-46b3-445f-aff9-9ca4d65cb2e5");
 
