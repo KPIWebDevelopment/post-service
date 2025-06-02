@@ -25,16 +25,15 @@ public class Post {
     @Column(name = "text")
     private String text;
 
-    @Column(name = "image_url", nullable = false)
-    private String imageUrl;
-
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
-    public Post(UUID userId, String text, String imageUrl) {
+    @Column(name = "image_saved", nullable = false)
+    boolean imageSaved = false;
+
+    public Post(UUID userId, String text) {
         this.userId = userId;
         this.text = text;
-        this.imageUrl = imageUrl;
         this.createdAt = LocalDateTime.now();
     }
 }

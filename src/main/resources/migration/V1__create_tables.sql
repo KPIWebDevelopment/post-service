@@ -3,7 +3,7 @@ CREATE TABLE posts (
     id UUID PRIMARY KEY,
     user_id UUID NOT NULL,
     text TEXT,
-    image_url VARCHAR(255),
+    image_saved BOOLEAN NOT NULL DEFAULT FALSE,
     created_at TIMESTAMP NOT NULL DEFAULT now()
 );
 

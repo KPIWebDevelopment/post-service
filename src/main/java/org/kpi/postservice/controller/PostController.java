@@ -33,10 +33,10 @@ public class PostController {
 
     @PostMapping
     public ResponseEntity<CreatePostResponse> createPost(@RequestHeader("Authorization") String authorizationHeader, @RequestBody CreatePostRequest post) {
-        Post postToSave = new Post(post.userId(), post.text(), post.imageUrl());
-        Post savedPost = postService.save(postToSave);
+        Post postToSave = new Post(post.userId(), post.text());
+        Post savedPost = postService.save(postToSave, post.image());
 
-        CreatePostResponse response = new CreatePostResponse(parseTokenToEmail(authorizationHeader), savedPost.getText(), savedPost.getImageUrl());
+        CreatePostResponse response = new CreatePostResponse(parseTokenToEmail(authorizationHeader), savedPost.getText());
         return ResponseEntity.ok(response);
     }
 

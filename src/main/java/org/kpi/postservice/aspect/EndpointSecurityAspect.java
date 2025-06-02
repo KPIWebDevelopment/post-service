@@ -48,7 +48,7 @@ public class EndpointSecurityAspect {
         HttpEntity<Map<String, String>> entity = new HttpEntity<>(requestBody, headers);
 
         ResponseEntity<Boolean> response = restTemplate.exchange(
-                "http://localhost:8081/auth/validate-request",
+                "http://localhost:8080/auth/validate-request",
                 HttpMethod.POST,
                 entity,
                 Boolean.class

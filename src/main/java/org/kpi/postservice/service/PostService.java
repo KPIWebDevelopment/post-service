@@ -2,7 +2,10 @@ package org.kpi.postservice.service;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.kpi.postservice.dto.CreatePostRequest;
+import org.kpi.postservice.messaging.producer.ImageProcessingRequestProducer;
+import org.kpi.postservice.model.ImageProcessingRequestMessage;
 import org.kpi.postservice.model.Post;
 import org.kpi.postservice.repository.PostRepository;
 import org.springframework.stereotype.Service;
@@ -12,24 +15,26 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class PostService {
 
     private final PostRepository postRepository;
     private final UserService userService;
-
-    public PostService(PostRepository postRepository, UserService userService) {
-        this.postRepository = postRepository;
-        this.userService = userService;
-    }
+    private final ImageProcessingRequestProducer imageProcessingRequestProducer;
 
     @Transactional
-    public Post save(Post post) {
+    public Post save(Post post, byte[] image) {
         if (post == null) {
             throw new IllegalArgumentException("Post cannot be null");
-        } else if (post.getUserId() == null || post.getImageUrl() == null) {
+        } else if (post.getUserId() == null || image == null) {
             throw new IllegalArgumentException("Illegal arguments provided");
         }
-
+        if (post.getId() == null) {
+            post.setId(UUID.randomUUID());
+        }
+        post.setImageSaved(false);
+        var message = new ImageProcessingRequestMessage(post.getId(), image);
+        imageProcessingRequestProducer.sendImageProcessingRequestMessage(message);
         return postRepository.save(post);
     }
 
@@ -44,9 +49,7 @@ public class PostService {
         }
         Post existingPost = postRepository.findById(postId)
                 .orElseThrow(() -> new EntityNotFoundException("Post not found with id: " + postId));
-
         existingPost.setText(updatedPost.getText());
-        existingPost.setImageUrl(updatedPost.getImageUrl());
         return postRepository.save(existingPost);
     }
 

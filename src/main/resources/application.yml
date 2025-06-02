@@ -1,0 +1,45 @@
+spring:
+  application:
+    name: post-service
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
+  rabbitmq:
+    host: ${AMQP_HOST:localhost}
+    port: ${AMQP_PORT:5672}
+    username: ${AMQP_USERNAME}
+    password: ${AMQP_PASSWORD}
+    listener:
+      simple:
+        acknowledge-mode: manual
+  jpa:
+    hibernate:
+      ddl-auto: validate
+  flyway:
+    enabled: true
+    url: jdbc:postgresql://${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
+    user: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
+    locations: classpath:migration
+
+image-processing:
+  rabbitmq:
+    exchange: image-processing-exchange
+    request-queue: image-processing-request-queue
+    request-routing-key: image.process.request
+    result-queue: image-processing-result-queue
+    result-routing-key: image.process.result
+
+user:
+  service:
+    host: http://localhost:8081
+
+jwt:
+  secret: kpisupersecret228123123123123123123123123
+  expiration: 3600000
+
+system:
+  username: system_user@kpi.ua
+  password: system
