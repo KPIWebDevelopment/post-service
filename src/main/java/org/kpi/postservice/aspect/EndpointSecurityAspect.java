@@ -48,7 +48,7 @@ public class EndpointSecurityAspect {
         HttpEntity<Map<String, String>> entity = new HttpEntity<>(requestBody, headers);
 
         ResponseEntity<Boolean> response = restTemplate.exchange(
-                "http://localhost:8080/auth/validate-request",
+                "http://user-service:8080/auth/validate-request",
                 HttpMethod.POST,
                 entity,
                 Boolean.class
@@ -60,6 +60,5 @@ public class EndpointSecurityAspect {
         else if (Boolean.FALSE.equals(response.getBody())){
             throw new SecurityException("JWT token validation failed with status: " + response.getStatusCode());
         }
-//        log.info("successfully authenticated request: " + request.getRequestURI());
     }
 }
