@@ -11,7 +11,9 @@ import org.kpi.postservice.service.PostService;
 import org.kpi.postservice.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
@@ -32,12 +34,20 @@ public class PostController {
     }
 
     @PostMapping
-    public ResponseEntity<CreatePostResponse> createPost(@RequestHeader("Authorization") String authorizationHeader, @RequestBody CreatePostRequest post) {
-        Post postToSave = new Post(post.userId(), post.text());
-        Post savedPost = postService.save(postToSave, post.image());
-
-        CreatePostResponse response = new CreatePostResponse(parseTokenToEmail(authorizationHeader), savedPost.getText());
-        return ResponseEntity.ok(response);
+    public ResponseEntity<CreatePostResponse> createPost(
+            @RequestHeader("Authorization") String authorizationHeader,
+            @RequestPart("post") CreatePostRequest post,
+            @RequestPart("image") MultipartFile image
+    ) {
+        try {
+            byte[] imageBytes = image.getBytes();
+            Post postToSave = new Post(post.userId(), post.text());
+            Post savedPost = postService.save(postToSave, imageBytes);
+            CreatePostResponse response = new CreatePostResponse(parseTokenToEmail(authorizationHeader), savedPost.getText());
+            return ResponseEntity.ok(response);
+        } catch (IOException e) {
+            return ResponseEntity.status(500).body(null);
+        }
     }
 
     @GetMapping("/posts-by-user")
