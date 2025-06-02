@@ -29,14 +29,14 @@ public class PostService {
         } else if (post.getUserId() == null || image == null) {
             throw new IllegalArgumentException("Illegal arguments provided");
         }
-        if (post.getId() == null) {
-            post.setId(UUID.randomUUID());
-        }
         post.setImageSaved(false);
-        var message = new ImageProcessingRequestMessage(post.getId(), image);
+        post.setCreatedAt(LocalDateTime.now());
+        Post savedPost = postRepository.save(post);
+        var message = new ImageProcessingRequestMessage(savedPost.getId(), image);
         imageProcessingRequestProducer.sendImageProcessingRequestMessage(message);
-        return postRepository.save(post);
+        return savedPost;
     }
+
 
     public List<Post> getPostsByUser(String userEmail) {
         return postRepository.findPostsByUserId(userService.getUserByEmail(userEmail).getId());
