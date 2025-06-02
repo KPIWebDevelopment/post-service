@@ -34,7 +34,7 @@ image-processing:
 
 user:
   service:
-    host: http://localhost:8081
+    host: http://user-service:8080
 
 jwt:
   secret: kpisupersecret228123123123123123123123123
