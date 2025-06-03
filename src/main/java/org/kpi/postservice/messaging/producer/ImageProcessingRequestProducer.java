@@ -14,6 +14,6 @@ public class ImageProcessingRequestProducer {
     private final RabbitMQProperties rabbitMQProperties;
 
     public void sendImageProcessingRequestMessage(ImageProcessingRequestMessage message) {
-        rabbitTemplate.convertAndSend(rabbitMQProperties.getExchange(), rabbitMQProperties.getRequestQueue(), message);
+        rabbitTemplate.convertAndSend(rabbitMQProperties.getExchange(), rabbitMQProperties.getRequestRoutingKey(), message);
     }
 }
